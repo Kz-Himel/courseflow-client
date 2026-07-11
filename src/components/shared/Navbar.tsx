@@ -166,13 +166,13 @@ export default function Navbar({
           ) : (
             <>
               <Link
-                href="/login"
+                href="/auth/login"
                 className="text-sm font-medium text-gray-600 hover:text-gray-900"
               >
                 Login
               </Link>
               <Link
-                href="/register"
+                href="/auth/register"
                 className="rounded-lg bg-[#6C5CE7] px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#5b4bd6]"
               >
                 Register
@@ -274,14 +274,14 @@ export default function Navbar({
             ) : (
               <div className="flex flex-col gap-2">
                 <Link
-                  href="/login"
+                  href="/auth/login"
                   onClick={() => setIsOpen(false)}
                   className="rounded-lg px-3 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                   Login
                 </Link>
                 <Link
-                  href="/register"
+                  href="/auth/register"
                   onClick={() => setIsOpen(false)}
                   className="rounded-lg bg-[#6C5CE7] px-3 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#5b4bd6]"
                 >
