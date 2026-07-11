@@ -1,35 +1,32 @@
+// src/app/auth/login/page.tsx
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { FiUser, FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import { FiMail, FiLock, FiEye, FiEyeOff, FiZap } from "react-icons/fi";
 import { HiOutlineBookOpen } from "react-icons/hi2";
 import { authClient } from "@/lib/auth-client";
 
 interface FormState {
-  name: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
 interface FormErrors {
-  name?: string;
   email?: string;
   password?: string;
-  confirmPassword?: string;
 }
 
-export default function RegisterPage() {
+const DEMO_CREDENTIALS: FormState = {
+  email: "demo@courseflow.com",
+  password: "Demo@1234",
+};
+
+export default function LoginPage() {
   const router = useRouter();
-  const [form, setForm] = useState<FormState>({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [form, setForm] = useState<FormState>({ email: "", password: "" });
   const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,10 +39,6 @@ export default function RegisterPage() {
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
 
-    if (!form.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
     if (!form.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
@@ -54,39 +47,25 @@ export default function RegisterPage() {
 
     if (!form.password) {
       newErrors.password = "Password is required";
-    } else if (form.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    }
-
-    if (form.confirmPassword !== form.password) {
-      newErrors.confirmPassword = "Passwords do not match";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validate()) return;
-
+  const performLogin = async (email: string, password: string) => {
     setIsSubmitting(true);
 
     try {
-      await authClient.signUp.email(
-        {
-          name: form.name,
-          email: form.email,
-          password: form.password,
-        },
+      await authClient.signIn.email(
+        { email, password },
         {
           onSuccess: () => {
-            toast.success("Account created successfully! Please login.");
-            router.push("/login");
+            toast.success("Logged in successfully!");
+            router.push("/");
           },
           onError: (ctx) => {
-            toast.error(ctx.error.message || "Registration failed. Try again.");
+            toast.error(ctx.error.message || "Invalid email or password");
             setIsSubmitting(false);
           },
         }
@@ -98,6 +77,18 @@ export default function RegisterPage() {
     }
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!validate()) return;
+    await performLogin(form.email, form.password);
+  };
+
+  const handleDemoLogin = async () => {
+    setForm(DEMO_CREDENTIALS);
+    setErrors({});
+    await performLogin(DEMO_CREDENTIALS.email, DEMO_CREDENTIALS.password);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
 
@@ -107,20 +98,20 @@ export default function RegisterPage() {
           
           {/* Left branding panel */}
           <div className="relative hidden w-1/2 flex-col justify-between bg-[#6C5CE7] p-12 text-white lg:flex">
-            <div className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/15">
                 <HiOutlineBookOpen size={19} />
               </span>
               <span className="text-lg font-bold">CourseFlow</span>
-            </div>
+            </Link>
 
             <div>
               <h2 className="text-3xl font-bold leading-tight">
-                Start your learning journey today.
+                Welcome back. Let&apos;s keep learning.
               </h2>
               <p className="mt-4 max-w-sm text-sm text-white/80">
-                Join thousands of students learning new skills from expert
-                instructors across the world.
+                Log in to continue your courses, track progress, and explore new
+                skills from expert instructors.
               </p>
             </div>
 
@@ -141,39 +132,12 @@ export default function RegisterPage() {
                 </span>
               </div>
 
-              <h1 className="text-2xl font-bold text-gray-900">
-                Create an account
-              </h1>
-              <p className="mt-1.5 text-sm text-gray-500">
-                Sign up to start exploring courses.
+              <h1 className="text-2xl font-bold text-gray-900">Login</h1>
+              <p className="mt-1.5 text-sm text-gray-500 pb-7">
+                Enter your credentials to access your account.
               </p>
 
-              <form onSubmit={handleSubmit} className="mt-7 space-y-4" noValidate>
-                {/* Name */}
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                    Full name
-                  </label>
-                  <div className="relative">
-                    <FiUser
-                      size={16}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                    />
-                    <input
-                      type="text"
-                      value={form.name}
-                      onChange={(e) => handleChange("name", e.target.value)}
-                      placeholder="Enter your name"
-                      className={`w-full rounded-lg border py-2.5 pl-9 pr-3 text-sm outline-none transition-colors focus:border-[#6C5CE7] ${
-                        errors.name ? "border-red-400" : "border-gray-200"
-                      }`}
-                    />
-                  </div>
-                  {errors.name && (
-                    <p className="mt-1 text-xs text-red-500">{errors.name}</p>
-                  )}
-                </div>
-
+              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                 {/* Email */}
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-gray-700">
@@ -201,9 +165,17 @@ export default function RegisterPage() {
 
                 {/* Password */}
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                    Password
-                  </label>
+                  <div className="mb-1.5 flex items-center justify-between">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Password
+                    </label>
+                    <Link
+                      href="/forgot-password"
+                      className="text-xs font-medium text-[#6C5CE7] hover:underline"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
                   <div className="relative">
                     <FiLock
                       size={16}
@@ -213,7 +185,7 @@ export default function RegisterPage() {
                       type={showPassword ? "text" : "password"}
                       value={form.password}
                       onChange={(e) => handleChange("password", e.target.value)}
-                      placeholder="Create a password"
+                      placeholder="Enter your password"
                       className={`w-full rounded-lg border py-2.5 pl-9 pr-9 text-sm outline-none transition-colors focus:border-[#6C5CE7] ${
                         errors.password ? "border-red-400" : "border-gray-200"
                       }`}
@@ -234,53 +206,22 @@ export default function RegisterPage() {
                   )}
                 </div>
 
-                {/* Confirm password */}
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                    Confirm password
-                  </label>
-                  <div className="relative">
-                    <FiLock
-                      size={16}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                    />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      value={form.confirmPassword}
-                      onChange={(e) =>
-                        handleChange("confirmPassword", e.target.value)
-                      }
-                      placeholder="Re-enter your password"
-                      className={`w-full rounded-lg border py-2.5 pl-9 pr-3 text-sm outline-none transition-colors focus:border-[#6C5CE7] ${
-                        errors.confirmPassword
-                          ? "border-red-400"
-                          : "border-gray-200"
-                      }`}
-                    />
-                  </div>
-                  {errors.confirmPassword && (
-                    <p className="mt-1 text-xs text-red-500">
-                      {errors.confirmPassword}
-                    </p>
-                  )}
-                </div>
-
                 <button
                   type="submit"
                   disabled={isSubmitting}
                   className="mt-2 w-full rounded-lg bg-[#6C5CE7] py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#5b4bd6] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {isSubmitting ? "Creating account..." : "Register"}
+                  {isSubmitting ? "Logging in..." : "Login"}
                 </button>
               </form>
 
               <p className="mt-6 text-center text-sm text-gray-500">
-                Already have an account?{" "}
+                Don&apos;t have an account?{" "}
                 <Link
-                  href="/auth/login"
+                  href="/auth/register"
                   className="font-medium text-[#6C5CE7] hover:underline"
                 >
-                  Login
+                  Register
                 </Link>
               </p>
             </div>
