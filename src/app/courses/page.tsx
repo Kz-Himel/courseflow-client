@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import CourseCard from "@/components/courses/CourseCard";
 import CourseCardSkeleton from "../../components/courses/CoursesCardSkeleton";
-// import FilterSidebar from "../../components/courses/FilterSidebar";
+import FilterSidebar from "../../components/courses/FilterSidebar";
 import { Course, CoursesApiResponse } from "../../types/course.js";
 
 const PAGE_LIMIT = 12;
@@ -76,7 +76,7 @@ export default function CoursesPage() {
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6">
-        {/* <FilterSidebar
+        <FilterSidebar
           search={search}
           onSearchChange={setSearch}
           category={category}
@@ -87,7 +87,7 @@ export default function CoursesPage() {
           onMaxPriceChange={setMaxPrice}
           onApply={handleApplyFilters}
           onReset={handleReset}
-        /> */}
+        />
 
         <div className="flex-1">
           <div className="flex items-center justify-between mb-5">
