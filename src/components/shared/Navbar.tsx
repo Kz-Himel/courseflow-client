@@ -141,7 +141,7 @@ export default function Navbar() {
                       </div>
                     )}
                     <Link
-                      href="/add-course"
+                      href="/dashboard/add-course"
                       className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                       onClick={() => setShowDropdown(false)}
                     >
@@ -149,7 +149,7 @@ export default function Navbar() {
                       Add Course
                     </Link>
                     <Link
-                      href="/my-courses"
+                      href="/dashboard/my-courses"
                       className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                       onClick={() => setShowDropdown(false)}
                     >
@@ -235,7 +235,7 @@ export default function Navbar() {
             {isLoggedIn && (
               <>
                 <Link
-                  href="/add-course"
+                  href="/dashboard/add-course"
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
@@ -243,7 +243,7 @@ export default function Navbar() {
                   Add Course
                 </Link>
                 <Link
-                  href="/my-courses"
+                  href="/dashboard/my-courses"
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
