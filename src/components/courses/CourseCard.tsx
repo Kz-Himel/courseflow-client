@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FaRegStar  } from "react-icons/fa";
+import { FaRegStar } from "react-icons/fa";
 import type { Course } from "@/types/course";
 
 const categoryColors: Record<string, string> = {
@@ -12,16 +12,29 @@ const categoryColors: Record<string, string> = {
   "Personal Development": "bg-indigo-900 text-indigo-200",
 };
 
+const getYouTubeThumbnail = (url: string) => {
+  if (!url) return null;
+  // 1. Cut v= from links
+  const videoId = url.split("v=")[1]?.split("&")[0];
+  return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : url;
+};
+
 export default function CourseCard({ course }: { course: Course }) {
   const badgeClass =
     categoryColors[course.category] || "bg-violet-700 text-white";
 
+  // 2. check if link from youtube if not create thumbnail
+  const displayThumbnail = course.thumbnailUrl?.includes("youtube.com")
+    ? getYouTubeThumbnail(course.thumbnailUrl)
+    : course.thumbnailUrl;
+
   return (
     <div className="flex flex-col h-full bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
       <div className={`relative w-full h-40 flex items-center justify-center ${badgeClass}`}>
-        {course.thumbnailUrl ? (
+        {/* 3. in src course.thumbnailUrl use displayThumbnail */}
+        {displayThumbnail ? (
           <Image
-            src={course.thumbnailUrl}
+            src={displayThumbnail}
             alt={course.title}
             fill
             className="object-cover"
