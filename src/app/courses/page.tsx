@@ -4,7 +4,8 @@ import { useEffect, useState, useCallback } from "react";
 import CourseCard from "@/components/courses/CourseCard";
 import CourseCardSkeleton from "../../components/courses/CoursesCardSkeleton";
 import FilterSidebar from "../../components/courses/FilterSidebar";
-import { Course, CoursesApiResponse } from "../../types/course.js";
+import { Course, CoursesApiResponse } from "../../types/course"; // .ts type import smoothly kaj korbe
+import { Button, Drawer } from "@heroui/react";
 
 const PAGE_LIMIT = 12;
 
@@ -22,6 +23,9 @@ export default function CoursesPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+
+  // Ekhane amra amader state define korchi jeta diye HeroUI Drawer control hobe
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const fetchCourses = useCallback(async () => {
     setLoading(true);
@@ -62,6 +66,7 @@ export default function CoursesPage() {
   const handleApplyFilters = () => {
     setPage(1);
     fetchCourses();
+    setIsDrawerOpen(false); // Filter apply korle mobile drawer ta auto bondho hoye jabe
   };
 
   const handleReset = () => {
@@ -76,38 +81,54 @@ export default function CoursesPage() {
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6">
-        <FilterSidebar
-          search={search}
-          onSearchChange={setSearch}
-          category={category}
-          onCategoryChange={setCategory}
-          level={level}
-          onLevelChange={setLevel}
-          maxPrice={maxPrice}
-          onMaxPriceChange={setMaxPrice}
-          onApply={handleApplyFilters}
-          onReset={handleReset}
-        />
+        
+        {/* DESKTOP SIDEBAR: Shudhu boro screen (lg:) e dekhabe, choto/medium e hidden */}
+        <div className="hidden lg:block">
+          <FilterSidebar
+            search={search}
+            onSearchChange={setSearch}
+            category={category}
+            onCategoryChange={setCategory}
+            level={level}
+            onLevelChange={setLevel}
+            maxPrice={maxPrice}
+            onMaxPriceChange={setMaxPrice}
+            onApply={handleApplyFilters}
+            onReset={handleReset}
+          />
+        </div>
 
         <div className="flex-1">
-          <div className="flex items-center justify-between mb-5">
-            <p className="text-sm text-gray-500">
-              {loading
-                ? "Loading courses..."
-                : `Showing ${courses.length ? (page - 1) * PAGE_LIMIT + 1 : 0}-${
-                    (page - 1) * PAGE_LIMIT + courses.length
-                  } of ${total} courses`}
-            </p>
+          <div className="flex items-center justify-between mb-5 gap-4">
+            
+            <div className="flex items-center gap-3">
+              {/* MOBILE FILTER BUTTON: Shudhu choto screen e ashbe, boro screen (lg:) e auto hide */}
+              <Button 
+                variant="secondary" 
+                className="lg:hidden text-sm px-4 py-2 bg-white border border-gray-200"
+                onClick={() => setIsDrawerOpen(true)}
+              >
+                Filters
+              </Button>
+              
+              <p className="text-sm text-gray-500 hidden sm:block">
+                {loading
+                  ? "Loading courses..."
+                  : `Showing ${courses.length ? (page - 1) * PAGE_LIMIT + 1 : 0}-${
+                      (page - 1) * PAGE_LIMIT + courses.length
+                    } of ${total} courses`}
+              </p>
+            </div>
 
             <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-500">Sort by:</label>
+              <label className="text-sm text-gray-500 whitespace-nowrap">Sort by:</label>
               <select
                 value={sortBy}
                 onChange={(e) => {
                   setSortBy(e.target.value);
                   setPage(1);
                 }}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-violet-500 bg-white"
               >
                 <option value="newest">Newest</option>
                 <option value="price_asc">Price: Low to High</option>
@@ -172,6 +193,44 @@ export default function CoursesPage() {
           )}
         </div>
       </div>
+
+      {/* HEROUI DRAWER SYSTEM (Mobile & Tablet Layout Wrapper) */}
+      <Drawer isOpen={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <Drawer.Backdrop>
+          <Drawer.Content placement="left"> {/* Dan dik theke slide hoye ashbe */}
+            <Drawer.Dialog className="h-full bg-white max-w-xs w-full flex flex-col">
+              <Drawer.Header className="border-b border-gray-100 px-5 py-4 flex justify-between items-center">
+                <Drawer.Heading className="text-base font-semibold text-gray-900">Filters</Drawer.Heading>
+                <Button 
+                  slot="close" 
+                  variant="secondary" 
+                  className="p-1 h-auto min-w-0 bg-transparent text-gray-400 hover:text-gray-700 text-sm"
+                  onClick={() => setIsDrawerOpen(false)}
+                >
+                  ✕
+                </Button>
+              </Drawer.Header>
+              
+              <Drawer.Body className="overflow-y-auto p-5 flex-1">
+                {/* Tomar dynamic sidebar filter responsive content ekhane active hobe */}
+                <FilterSidebar
+                  search={search}
+                  onSearchChange={setSearch}
+                  category={category}
+                  onCategoryChange={setCategory}
+                  level={level}
+                  onLevelChange={setLevel}
+                  maxPrice={maxPrice}
+                  onMaxPriceChange={setMaxPrice}
+                  onApply={handleApplyFilters}
+                  onReset={handleReset}
+                  isMobileContainer={true}
+                />
+              </Drawer.Body>
+            </Drawer.Dialog>
+          </Drawer.Content>
+        </Drawer.Backdrop>
+      </Drawer>
     </div>
   );
 }
