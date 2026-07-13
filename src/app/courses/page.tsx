@@ -80,6 +80,16 @@ export default function CoursesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
+
+      <div className="text-center mb-10">
+          <span className="inline-block bg-purple-100 text-purple-600 text-xs font-bold px-3 py-1.5 rounded-full mb-3">
+            Explore Here
+          </span>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+            Explore Our Exclusive Courses
+          </h1>
+        </div>
+
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6">
         
         {/* DESKTOP SIDEBAR: Shudhu boro screen (lg:) e dekhabe, choto/medium e hidden */}

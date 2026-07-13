@@ -1,5 +1,6 @@
 import { IoMailUnreadOutline } from "react-icons/io5";
-import { FaPhone, FaRegClock } from "react-icons/fa";
+import { MdOutlineLocalPhone } from "react-icons/md";
+import { FaRegClock } from "react-icons/fa";
 import { LuMapPin } from "react-icons/lu";
 const info = [
   {
@@ -8,7 +9,7 @@ const info = [
     detail: "support@courseflow.com",
   },
   {
-    icon: FaPhone,
+    icon: MdOutlineLocalPhone,
     title: "Call Us",
     detail: "+880 1526-449846",
   },

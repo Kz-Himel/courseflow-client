@@ -7,6 +7,7 @@ import { FaRegStar } from "react-icons/fa";
 import { MdOutlinePlayCircle, MdLockReset, MdOutlinePhonelinkSetup, MdWorkspacePremium } from "react-icons/md";
 import type { Course } from "@/types/course";
 import { authClient } from "@/lib/auth-client";
+import { WishlistProvider } from "@/context/WishlistContext";
 
 // Tab active component components local dynamic data structure
 import CourseTabs from "@/components/courses/CourseTabs";
@@ -202,7 +203,9 @@ export default function CourseDetailsPage({
 
             {/* RIGHT SIDE: Dynamic Enroll Widget Card Active */}
             <div className="lg:col-span-1 sticky top-6">
-              <EnrollCard course={course} />
+              <WishlistProvider>
+                <EnrollCard course={course} />
+              </WishlistProvider>
             </div>
 
           </div>

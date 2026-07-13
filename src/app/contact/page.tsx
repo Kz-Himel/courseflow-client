@@ -6,7 +6,7 @@ export default function ContactPage() {
     <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
-          <span className="inline-block bg-orange-50 text-orange-500 text-xs font-medium px-3 py-1.5 rounded-full mb-3">
+          <span className="inline-block bg-purple-100 text-purple-600 text-xs font-bold px-3 py-1.5 rounded-full mb-3">
             Get In Touch
           </span>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
