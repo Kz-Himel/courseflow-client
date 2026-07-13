@@ -105,7 +105,6 @@ export default function AddCourseForm() {
     console.error(err);
     setError("Something went wrong. Please try again.");
   } finally {
-    // এখানে কোনো কন্ডিশন ছাড়াই সরাসরি setLoading(false) দিন
     setLoading(false);
   }
 };
