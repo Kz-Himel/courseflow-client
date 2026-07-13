@@ -16,6 +16,7 @@ import {
   FiLogOut,
 } from "react-icons/fi";
 import { HiOutlineBookOpen } from "react-icons/hi2";
+import { MdFormatListBulletedAdd } from "react-icons/md";
 // Import your auth client here (adjust the path to match your actual auth-client file structure)
 import { authClient } from "@/lib/auth-client"; 
 
@@ -156,6 +157,14 @@ export default function Navbar() {
                       <FiGrid size={16} className="text-gray-400" />
                       My Courses
                     </Link>
+                    <Link
+                      href="/dashboard/my-wishlist"
+                      className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      <MdFormatListBulletedAdd  size={16} className="text-gray-400" />
+                      My Wishlist
+                    </Link>
                     <div className="my-1 border-t border-gray-100" />
                     <button
                       onClick={handleLogout}
@@ -249,6 +258,14 @@ export default function Navbar() {
                 >
                   <FiGrid size={16} className="text-gray-400" />
                   My Courses
+                </Link>
+                <Link
+                  href="/dashboard/my-wishlist"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                >
+                  <MdFormatListBulletedAdd  size={16} className="text-gray-400" />
+                  My Wishlist
                 </Link>
               </>
             )}

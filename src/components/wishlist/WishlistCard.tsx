@@ -3,13 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
-import { FiTrash2 } from "react-icons/fi";
 import type { WishlistEntry } from "@/types/wishlist";
+import { DeleteWishlistItem } from "../wishlist/DeleteWishListItem"; 
 
 interface WishlistCardProps {
   entry: WishlistEntry;
-  isRemoving: boolean;
-  onRemove: (id: string) => void;
+  onRemove: (id: string) => void; // 💡 এখানে onRefresh-এর বদলে মেইন পেজের পাঠানো onRemove যুক্ত করা হলো
 }
 
 // ইউটিউব লিংক থেকে ইমেজ বের করার হেল্পার ফাংশন
@@ -19,7 +18,7 @@ const getYouTubeThumbnail = (url: string) => {
   return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : url;
 };
 
-export default function WishlistCard({ entry, isRemoving, onRemove }: WishlistCardProps) {
+export default function WishlistCard({ entry, onRemove }: WishlistCardProps) { // 💡 এখানেও onRemove রিসিভ করা হলো
   // ইউটিউব লিংক নাকি সাধারণ ছবির লিংক তা চেক করা
   const displayThumbnail = entry.course?.thumbnailUrl?.includes("youtube.com")
     ? getYouTubeThumbnail(entry.course.thumbnailUrl)
@@ -31,7 +30,7 @@ export default function WishlistCard({ entry, isRemoving, onRemove }: WishlistCa
         {displayThumbnail ? (
           <Image
             src={displayThumbnail}
-            alt={entry.course.title}
+            alt={entry.course?.title || "Course Image"}
             fill
             className="object-cover"
           />
@@ -40,14 +39,15 @@ export default function WishlistCard({ entry, isRemoving, onRemove }: WishlistCa
             {entry.course?.category}
           </span>
         )}
-        <button
-          onClick={() => onRemove(entry._id)}
-          disabled={isRemoving}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center transition-colors disabled:opacity-50"
-          aria-label="Remove from wishlist"
-        >
-          <FiTrash2 className="w-4 h-4 text-red-500" />
-        </button>
+
+        {/* ─── এখানে onSuccess-এর ভেতর ডিলিট হওয়া আইটেমের আইডি সহ onRemove কল করা হলো ─── */}
+        <div className="absolute top-3 right-3 z-10">
+          <DeleteWishlistItem 
+            wishlistId={entry._id} 
+            onSuccess={() => onRemove(entry._id)} // 💡 আইডিটি পাস করা অত্যন্ত জরুরি
+          />
+        </div>
+        {/* ───────────────────────────────────────────────────────────────────────── */}
       </div>
 
       <div className="flex flex-col flex-1 p-4">

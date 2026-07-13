@@ -10,7 +10,6 @@ import WishlistCard from "@/components/wishlist/WishlistCard";
 export default function WishlistPage() {
   const [wishlist, setWishlist] = useState<WishlistEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [removingId, setRemovingId] = useState<string | null>(null);
 
   const fetchWishlist = async () => {
     setLoading(true);
@@ -46,29 +45,9 @@ export default function WishlistPage() {
     fetchWishlist();
   }, []);
 
-  const handleRemove = async (id: string) => {
-    setRemovingId(id);
-    try {
-      const tokenRes = await authClient.token?.();
-      const token = tokenRes?.data?.token;
-      if (!token) return;
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/wishlists/${id}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (res.ok) {
-        setWishlist((prev) => prev.filter((item) => item._id !== id));
-      }
-    } catch (err) {
-      console.error("Failed to remove item", err);
-    } finally {
-      setRemovingId(null);
-    }
+  // এই ফাংশনটি চাইল্ড কম্পোনেন্ট ডিলিট হওয়ার পর কল করবে
+  const handleRemove = (id: string) => {
+    setWishlist((prev) => prev.filter((item) => item._id.toString() !== id.toString()));
   };
 
   return (
@@ -88,10 +67,7 @@ export default function WishlistPage() {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-72 bg-white rounded-2xl border border-gray-200 animate-pulse"
-              />
+              <div key={i} className="h-72 bg-white rounded-2xl border border-gray-200 animate-pulse" />
             ))}
           </div>
         ) : wishlist.length === 0 ? (
@@ -99,16 +75,9 @@ export default function WishlistPage() {
             <div className="w-14 h-14 rounded-full bg-violet-50 flex items-center justify-center mb-4">
               <FaRegHeart className="w-6 h-6 text-violet-500" />
             </div>
-            <h3 className="text-sm font-semibold text-gray-900 mb-1">
-              Your wishlist is empty
-            </h3>
-            <p className="text-sm text-gray-500 mb-5">
-              Browse courses and tap "Add to Wishlist" to save them here.
-            </p>
-            <Link
-              href="/courses"
-              className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 transition-colors"
-            >
+            <h3 className="text-sm font-semibold text-gray-900 mb-1">Your wishlist is empty</h3>
+            <p className="text-sm text-gray-500 mb-5">Browse courses and tap "Add to Wishlist" to save them here.</p>
+            <Link href="/courses" className="px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-violet-600 hover:bg-violet-700 transition-colors">
               Explore Courses
             </Link>
           </div>
@@ -116,10 +85,9 @@ export default function WishlistPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {wishlist.map((entry) => (
               <WishlistCard
-                key={entry._id}
+                key={entry._id.toString()}
                 entry={entry}
-                isRemoving={removingId === entry._id}
-                onRemove={handleRemove}
+                onRemove={handleRemove} // পেজের ফাংশনটি কার্ডের ভেতর পাস করা হলো
               />
             ))}
           </div>
