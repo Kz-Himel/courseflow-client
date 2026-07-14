@@ -26,3 +26,9 @@ export interface ConfirmPaymentResponse {
   message: string;
   transactionId?: string;
 }
+
+export interface EnrolledCourse {
+  _id: string;
+  enrolledAt: string;
+  course: Course;
+}
