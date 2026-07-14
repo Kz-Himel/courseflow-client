@@ -6,13 +6,14 @@ import Image from "next/image";
 import { FaRegStar } from "react-icons/fa";
 import { MdOutlinePlayCircle, MdLockReset, MdOutlinePhonelinkSetup, MdWorkspacePremium } from "react-icons/md";
 import type { Course } from "@/types/course";
-import { authClient } from "@/lib/auth-client";
 import { WishlistProvider } from "@/context/WishlistContext";
 
 // Tab active component components local dynamic data structure
 import CourseTabs from "@/components/courses/CourseTabs";
 import EnrollCard from "@/components/courses/EnrollCard";
 import RelatedCourses from "@/components/courses/RelatedCourses";
+import { toast } from "react-toastify";
+import { CourseDetailsSkeleton } from "@/components/courses/CourseDetailsSkeleton";
 
 const getYouTubeThumbnail = (url: string) => {
   if (!url) return null;
@@ -42,16 +43,9 @@ export default function CourseDetailsPage({
       setLoading(true);
       setError("");
 
-      const tokenRes = await authClient.token?.();
-      const token = tokenRes?.data?.token;
-
       const headers: HeadersInit = {
         "Content-Type": "application/json",
       };
-
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
 
       // 1. Fetch main course data
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${id}`, {
@@ -62,6 +56,7 @@ export default function CourseDetailsPage({
 
       if (!res.ok || !data.success) {
         setError(data.message || "Failed to fetch course data");
+        toast.error("Failed to fetch course data")
         return;
       }
 
@@ -97,11 +92,7 @@ export default function CourseDetailsPage({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
-        <div className="text-sm font-medium text-gray-500 animate-pulse">
-          Loading full components and dashboard...
-        </div>
-      </div>
+      <CourseDetailsSkeleton />
     );
   }
 

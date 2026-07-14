@@ -19,9 +19,6 @@ export default function EnrollButton({ courseId }: EnrollButtonProps) {
         toast.error("Invalid course");
         return;
       }
-
-      // sudhu payment page e pathiye dicche, actual payment initiate call
-      // hobe payment page e Pay Now click korle
       router.push(`/payment/${courseId}`);
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
