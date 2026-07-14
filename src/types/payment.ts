@@ -8,6 +8,12 @@ export interface Course {
   lessons?: number;
 }
 
+export interface MyListedCourse extends Course {
+  category?: string;
+  status?: "published" | "draft";
+  createdAt?: string;
+}
+
 export interface PaymentMethod {
   id: string;
   label: string;
