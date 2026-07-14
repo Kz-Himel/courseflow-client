@@ -166,7 +166,7 @@ export default function Footer() {
               <button
                 type="submit"
                 aria-label="Subscribe"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#FF7A59] text-white transition-colors hover:bg-[#e96a4a]"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#6C5CE7] text-white transition-colors hover:bg-purple-600"
               >
                 <FiArrowRight size={16} />
               </button>
