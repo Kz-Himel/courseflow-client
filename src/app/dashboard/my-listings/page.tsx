@@ -7,12 +7,15 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import { FaEdit, FaTrash, FaPlus, FaBookOpen } from "react-icons/fa";
 import { MyListedCourse } from "@/types/payment";
+import EditCourseModal from "@/components/dasboard/EditCourseModal";
 
 export default function MyListingsPage() {
   const router = useRouter();
   const [courses, setCourses] = useState<MyListedCourse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<MyListedCourse | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchMyListings = async () => {
     try {
@@ -173,24 +176,26 @@ export default function MyListingsPage() {
                     <td className="p-4 font-semibold text-gray-900">${course.price}</td>
                     <td className="p-4">
                       <span
-                        className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                          course.status === "draft"
+                        className={`text-xs font-medium px-2.5 py-1 rounded-full ${course.status === "draft"
                             ? "bg-gray-100 text-gray-500"
                             : "bg-emerald-50 text-emerald-600"
-                        }`}
+                          }`}
                       >
                         {course.status === "draft" ? "Draft" : "Published"}
                       </span>
                     </td>
                     <td className="p-4">
                       <div className="flex items-center justify-end gap-2">
-                        <Link
-                          href={`/courses/edit/${course._id}`}
-                          className="p-2 text-gray-500 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors"
+                        <button
+                          onClick={() => {
+                            setSelectedCourse(course);
+                            setIsModalOpen(true);
+                          }}
+                          className="p-2 text-gray-500 hover:text-purple-600 hover:bg-violet-50 rounded-lg transition-colors"
                           title="Edit"
                         >
                           <FaEdit className="w-4 h-4" />
-                        </Link>
+                        </button>
                         <button
                           onClick={() => handleDelete(course._id)}
                           disabled={deletingId === course._id}
@@ -233,22 +238,25 @@ export default function MyListingsPage() {
                     {course.category || "—"} • ${course.price}
                   </p>
                   <span
-                    className={`inline-block mt-1 text-xs font-medium px-2 py-0.5 rounded-full ${
-                      course.status === "draft"
+                    className={`inline-block mt-1 text-xs font-medium px-2 py-0.5 rounded-full ${course.status === "draft"
                         ? "bg-gray-100 text-gray-500"
                         : "bg-emerald-50 text-emerald-600"
-                    }`}
+                      }`}
                   >
                     {course.status === "draft" ? "Draft" : "Published"}
                   </span>
                 </div>
                 <div className="flex flex-col gap-1 shrink-0">
-                  <Link
-                    href={`/courses/edit/${course._id}`}
+                  <button
+                    onClick={() => {
+                      setSelectedCourse(course);
+                      setIsModalOpen(true);
+                    }}
                     className="p-2 text-gray-500 hover:text-violet-600 hover:bg-violet-50 rounded-lg transition-colors"
+                    title="Edit"
                   >
                     <FaEdit className="w-4 h-4" />
-                  </Link>
+                  </button>
                   <button
                     onClick={() => handleDelete(course._id)}
                     disabled={deletingId === course._id}
@@ -262,6 +270,16 @@ export default function MyListingsPage() {
           </div>
         )}
       </div>
+      <EditCourseModal
+        course={selectedCourse}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onUpdated={(updated) => {
+          setCourses((prev) =>
+            prev.map((c) => (c._id === updated._id ? updated : c))
+          );
+        }}
+      />
     </div>
   );
 }
