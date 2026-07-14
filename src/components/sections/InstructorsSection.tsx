@@ -73,7 +73,7 @@ export default function InstructorsSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
+          <span className="text-xs font-semibold text-violet-600 bg-violet-50 px-3 py-1 rounded-full">
             Our Mentors
           </span>
           <h2 className="text-3xl font-bold text-gray-900 mt-4">
