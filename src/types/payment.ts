@@ -1,0 +1,28 @@
+export interface Course {
+  _id: string;
+  title: string;
+  instructorName: string;
+  price: number;
+  thumbnail: string;
+  duration?: string;
+  lessons?: number;
+}
+
+export interface PaymentMethod {
+  id: string;
+  label: string;
+}
+
+export interface InitiatePaymentResponse {
+  success: boolean;
+  transactionId: string;
+  amount: number;
+  courseTitle: string;
+  message?: string;
+}
+
+export interface ConfirmPaymentResponse {
+  success: boolean;
+  message: string;
+  transactionId?: string;
+}

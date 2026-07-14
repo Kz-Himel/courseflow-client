@@ -113,6 +113,7 @@ import { FiBookOpen } from "react-icons/fi";
 import { IoIosGlobe } from "react-icons/io";
 import type { Course } from "@/types/course";
 import { authClient } from "@/lib/auth-client";
+import EnrollButton from "./EnrollButton";
 
 export default function EnrollCard({ course }: { course: Course }) {
   const [wishlisted, setWishlisted] = useState(false);
@@ -218,9 +219,8 @@ export default function EnrollCard({ course }: { course: Course }) {
         )}
       </div>
 
-      <button className="w-full bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold py-3 rounded-lg transition-colors mb-2">
-        Enroll Now
-      </button>
+      {/* Enroll Button */}
+      <EnrollButton courseId={course._id}/>
 
       <button
         onClick={handleWishlistClick}
