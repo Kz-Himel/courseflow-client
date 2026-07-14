@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react"; // useRef যোগ করা হয়েছে
 import { useParams, useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
@@ -30,6 +30,9 @@ export default function PaymentPage() {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [transactionId, setTransactionId] = useState<string | null>(null);
 
+  // ডাবল টোস্ট আটকানোর জন্য রিফ
+  const hasToasted = useRef(false);
+
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -37,7 +40,10 @@ export default function PaymentPage() {
         const token = tokenRes?.data?.token;
 
         if (!token) {
-          toast.error("Please log in to continue");
+          if (!hasToasted.current) {
+            toast.error("Please log in to continue");
+            hasToasted.current = true; // ফ্ল্যাগ ট্রু করে দেওয়া হলো
+          }
           router.push("/auth/login");
           return;
         }
@@ -47,7 +53,10 @@ export default function PaymentPage() {
         });
 
         if (res.status === 401) {
-          toast.error("Session expired. Please log in again.");
+          if (!hasToasted.current) {
+            toast.error("Session expired. Please log in again.");
+            hasToasted.current = true;
+          }
           router.push("/auth/login");
           return;
         }
@@ -72,13 +81,16 @@ export default function PaymentPage() {
         const tokenRes = await authClient.token?.();
         const token = tokenRes?.data?.token;
 
+        // এখানেও যদি টোকেন না থাকে তবে রিকোয়েস্ট পাঠানোর দরকার নেই
+        if (!token) return; 
+
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/payments/create-payment-intent`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
+              "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify({ courseId }),
           }
@@ -124,7 +136,6 @@ export default function PaymentPage() {
     }
   };
 
-  // bKash / Nagad — age er mock flow
   const handleMockPay = async () => {
     setIsProcessing(true);
     try {

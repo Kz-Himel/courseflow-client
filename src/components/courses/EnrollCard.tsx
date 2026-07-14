@@ -45,7 +45,7 @@ export default function EnrollCard({ course }: { course: Course }) {
           setWishlisted(!!exists);
         }
       } catch (err) {
-        console.error("Failed to check wishlist status", err);
+        // console.error("Failed to check wishlist status", err);
         toast.error("Failed to check wishlist status");
       } finally {
         setChecking(false);

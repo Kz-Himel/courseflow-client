@@ -8,6 +8,13 @@ import { toast } from "react-toastify";
 import { FaStar, FaClock, FaBookOpen } from "react-icons/fa";
 import { EnrolledCourse } from "@/types/payment";
 
+// ১. ইউটিউব থাম্বনেইল বের করার হুবহু সেইম ফাংশন
+const getYouTubeThumbnail = (url: string) => {
+  if (!url) return null;
+  const videoId = url.split("v=")[1]?.split("&")[0];
+  return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : url;
+};
+
 export default function MyCoursesPage() {
   const router = useRouter();
   const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourse[]>([]);
@@ -21,7 +28,7 @@ export default function MyCoursesPage() {
 
         if (!token) {
           toast.error("Please log in to view your courses");
-          router.push("/login");
+          router.push("/auth/login");
           return;
         }
 
@@ -31,7 +38,7 @@ export default function MyCoursesPage() {
 
         if (res.status === 401) {
           toast.error("Session expired. Please log in again.");
-          router.push("/login");
+          router.push("/auth/login");
           return;
         }
 
@@ -65,7 +72,7 @@ export default function MyCoursesPage() {
                 key={i}
                 className="bg-white rounded-2xl border border-gray-200 overflow-hidden animate-pulse"
               >
-                <div className="h-36 bg-gray-200" />
+                <div className="aspect-video w-full bg-gray-200" />
                 <div className="p-4 space-y-3">
                   <div className="h-4 bg-gray-200 rounded w-3/4" />
                   <div className="h-3 bg-gray-200 rounded w-1/2" />
@@ -98,59 +105,79 @@ export default function MyCoursesPage() {
         {/* Course grid */}
         {!isLoading && enrolledCourses.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {enrolledCourses.map((item) => (
-              <div
-                key={item._id}
-                className="bg-white rounded-2xl border border-gray-200 overflow-hidden flex flex-col h-full hover:shadow-md transition-shadow"
-              >
-                {/* Thumbnail */}
-                <div className="h-36 bg-violet-100 flex items-center justify-center overflow-hidden">
-                  {item.course.thumbnail ? (
-                    <img
-                      src={item.course.thumbnail}
-                      alt={item.course.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span className="text-violet-500 font-bold text-sm">Course</span>
-                  )}
-                </div>
+            {enrolledCourses.map((item) => {
+              // ২. CourseCard এর মতই চেক করে ইউটিউব বা ডিরেক্ট ইমেজ URL নির্ধারণ
+              const rawThumbnail = item.course?.thumbnailUrl || item.course?.thumbnail;
+              const displayThumbnail = rawThumbnail?.includes("youtube.com")
+                ? getYouTubeThumbnail(rawThumbnail)
+                : rawThumbnail;
 
-                {/* Content */}
-                <div className="p-4 flex flex-col flex-1">
-                  <span className="text-xs font-medium text-violet-600 bg-violet-50 w-fit px-2 py-0.5 rounded-full mb-2">
-                    Enrolled
-                  </span>
-
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">
-                    {item.course.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 mb-3">{item.course.instructorName}</p>
-
-                  <div className="flex items-center gap-3 text-xs text-gray-400 mb-4">
-                    {item.course.duration && (
-                      <span className="flex items-center gap-1">
-                        <FaClock className="w-3 h-3" />
-                        {item.course.duration}
+              return (
+                <div
+                  key={item._id}
+                  className="bg-white rounded-2xl border border-gray-200 overflow-hidden flex flex-col h-full hover:shadow-md transition-shadow"
+                >
+                  {/* Thumbnail Wrapper */}
+                  <div className="relative aspect-video w-full bg-violet-100 flex items-center justify-center overflow-hidden border-b border-gray-100">
+                    {displayThumbnail ? (
+                      <img
+                        src={displayThumbnail}
+                        alt={item.course?.title || "Course thumbnail"}
+                        className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          const fallback = e.currentTarget.parentElement?.querySelector('.fallback-placeholder');
+                          if (fallback) fallback.classList.remove('hidden');
+                        }}
+                      />
+                    ) : null}
+                    
+                    {/* Fallback Placeholder (যদি ইমেজ না থাকে বা ক্র্যাশ করে) */}
+                    <div className={`fallback-placeholder absolute inset-0 flex flex-col items-center justify-center bg-violet-50 px-4 text-center ${displayThumbnail ? 'hidden' : ''}`}>
+                      <FaBookOpen className="w-6 h-6 text-violet-400 mb-1.5" />
+                      <span className="text-violet-600 font-semibold text-xs tracking-wide">
+                        {item.course?.category || "Course"}
                       </span>
-                    )}
-                    {item.course.lessons && (
-                      <span className="flex items-center gap-1">
-                        <FaStar className="w-3 h-3" />
-                        {item.course.lessons} Lessons
-                      </span>
-                    )}
+                    </div>
                   </div>
 
-                  <Link
-                    href={`/courses/${item.course._id}`}
-                    className="mt-auto w-full text-center bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium py-2.5 rounded-xl transition-colors"
-                  >
-                    Continue Learning
-                  </Link>
+                  {/* Content */}
+                  <div className="p-4 flex flex-col flex-1">
+                    <span className="text-xs font-medium text-violet-600 bg-violet-50 w-fit px-2 py-0.5 rounded-full mb-2">
+                      Enrolled
+                    </span>
+
+                    <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2 min-h-[40px]">
+                      {item.course?.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 mb-3">{item.course?.instructorName}</p>
+
+                    <div className="flex items-center gap-3 text-xs text-gray-400 mb-4">
+                      {item.course?.duration && (
+                        <span className="flex items-center gap-1">
+                          <FaClock className="w-3 h-3" />
+                          {item.course.duration}
+                        </span>
+                      )}
+                      {item.course?.lessons && (
+                        <span className="flex items-center gap-1">
+                          <FaStar className="w-3 h-3" />
+                          {item.course.lessons} Lessons
+                        </span>
+                      )}
+                    </div>
+
+                    <Link
+                      href={`/courses/${item.course?._id}`}
+                      className="mt-auto w-full text-center bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium py-2.5 rounded-xl transition-colors"
+                    >
+                      Continue Learning
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
