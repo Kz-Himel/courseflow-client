@@ -3,8 +3,8 @@ import ContactInfo from "@/components/contact/ContactInfo";
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
           <span className="inline-block bg-purple-100 text-purple-600 text-xs font-bold px-3 py-1.5 rounded-full mb-3">
             Get In Touch

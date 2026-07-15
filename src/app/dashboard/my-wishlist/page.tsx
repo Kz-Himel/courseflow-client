@@ -45,14 +45,14 @@ export default function WishlistPage() {
     fetchWishlist();
   }, []);
 
-  // এই ফাংশনটি চাইল্ড কম্পোনেন্ট ডিলিট হওয়ার পর কল করবে
+  // call after delete child component
   const handleRemove = (id: string) => {
     setWishlist((prev) => prev.filter((item) => item._id.toString() !== id.toString()));
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8 md:px-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">My Wishlist</h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -87,7 +87,7 @@ export default function WishlistPage() {
               <WishlistCard
                 key={entry._id.toString()}
                 entry={entry}
-                onRemove={handleRemove} // পেজের ফাংশনটি কার্ডের ভেতর পাস করা হলো
+                onRemove={handleRemove}
               />
             ))}
           </div>
