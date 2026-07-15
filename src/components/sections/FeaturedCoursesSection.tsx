@@ -32,7 +32,10 @@ export default function FeaturedCoursesSection() {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/featured`);
         const data = await res.json();
-        setCourses(data.data || []);
+        
+        // First 4 cards
+        const featuredData = data.data || [];
+        setCourses(featuredData.slice(0, 4));
       } catch (error) {
         console.error("Failed to load featured courses", error);
       } finally {
@@ -44,10 +47,10 @@ export default function FeaturedCoursesSection() {
 
   return (
     <section className="w-full py-16 bg-white">
-      {/* w-full দিয়ে নিশ্চিত করা হলো এটা পুরো স্ক্রিন জুড়েই থাকবে */}
+      {/*  */}
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* হেডারটিকেও টেস্টমোনিয়ালের মতো একদম text-center এবং ফুল উইডথ করা হলো */}
+        {/* */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -66,7 +69,7 @@ export default function FeaturedCoursesSection() {
           </p>
         </motion.div>
 
-        {/* Skeleton loader — w-full নিশ্চিত করা হয়েছে */}
+        {/* Skeleton loader — w-full  */}
         {isLoading && (
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -92,7 +95,7 @@ export default function FeaturedCoursesSection() {
           </p>
         )}
 
-        {/* Course grid — w-full দিয়ে পুরো ৭xl উইডথ জুড়ে গ্রিড ছড়াবে */}
+        {/* Course grid  */}
         {!isLoading && courses.length > 0 && (
           <motion.div
             variants={containerVariants}
@@ -106,7 +109,7 @@ export default function FeaturedCoursesSection() {
                 key={course._id} 
                 variants={cardVariants}
                 whileHover={{ y: -4 }}
-                className="w-full" // প্রতিটি কার্ডের র‍্যাপার ফুল উইডথ পাবে
+                className="w-full" 
               >
                 <CourseCard course={course} />
               </motion.div>
@@ -114,7 +117,7 @@ export default function FeaturedCoursesSection() {
           </motion.div>
         )}
 
-        {/* View All বাটনটি এখন নিচে সুন্দর করে সেন্টারে বসানো হয়েছে, যা দেখতে প্রফেশনাল লাগবে */}
+        {/*  */}
         <div className="text-center mt-10">
           <Link
             href="/courses"
