@@ -11,7 +11,7 @@ export interface Course {
   language?: string;
   price: number;
   originalPrice?: number;
-  thumbnailUrl: string;
+  thumbnailUrl?: string;
   shortDescription: string;
   fullDescription: string;
   whatYouWillLearn?: string[];
