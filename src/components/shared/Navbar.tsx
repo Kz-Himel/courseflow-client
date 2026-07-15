@@ -2,11 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   FiMenu,
   FiX,
-  FiSearch,
   FiShoppingCart,
   FiUser,
   FiChevronDown,
@@ -29,11 +28,8 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [mobileSearchQuery, setMobileSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const router = useRouter();
 
   // Get data directly from your auth client
   const { data: session, isPending } = authClient.useSession();
@@ -49,25 +45,6 @@ export default function Navbar() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-  const runSearch = (query: string) => {
-    const trimmed = query.trim();
-    if (!trimmed) return;
-    router.push(`/courses?search=${encodeURIComponent(trimmed)}`);
-  };
-
-  const handleDesktopSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      runSearch(searchQuery);
-    }
-  };
-
-  const handleMobileSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      runSearch(mobileSearchQuery);
-      setIsOpen(false);
-    }
-  };
-
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -80,7 +57,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-100/80 bg-white backdrop-blur-md transition-all duration-200">
-      <div className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
 
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2.5 group">
@@ -93,7 +70,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 lg:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -110,28 +87,6 @@ export default function Navbar() {
             </Link>
           ))}
         </nav>
-
-        {/* Desktop Search Bar */}
-        <div className="hidden flex-1 max-w-xs items-center lg:flex">
-          <div className="relative w-full group">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleDesktopSearchKeyDown}
-              placeholder="Search courses..."
-              className="w-full rounded-xl border border-gray-200 bg-gray-50/60 py-2 pl-3 pr-9 text-sm text-gray-700 transition-all duration-200 outline-none focus:border-[#6C5CE7] focus:bg-white focus:ring-2 focus:ring-[#6C5CE7]/10"
-            />
-            <button
-              type="button"
-              aria-label="Search"
-              onClick={() => runSearch(searchQuery)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#6C5CE7] transition-colors"
-            >
-              <FiSearch size={16} />
-            </button>
-          </div>
-        </div>
 
         {/* Right Side Actions (Desktop) */}
         <div className="hidden shrink-0 items-center gap-5 lg:flex">
@@ -248,29 +203,6 @@ export default function Navbar() {
         }`}
       >
         <div className="flex flex-col gap-4 px-4 py-4 bg-white">
-          {/* Search bar for mobile/tablet */}
-          <div className="relative">
-            <input
-              type="text"
-              value={mobileSearchQuery}
-              onChange={(e) => setMobileSearchQuery(e.target.value)}
-              onKeyDown={handleMobileSearchKeyDown}
-              placeholder="Search courses..."
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2 pl-3 pr-9 text-sm text-gray-700 outline-none focus:border-[#6C5CE7] focus:bg-white"
-            />
-            <button
-              type="button"
-              aria-label="Search"
-              onClick={() => {
-                runSearch(mobileSearchQuery);
-                setIsOpen(false);
-              }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
-            >
-              <FiSearch size={16} />
-            </button>
-          </div>
-
           {/* Navigation Links for mobile/tablet */}
           <nav className="flex flex-col gap-1">
             {NAV_LINKS.map((link) => (
