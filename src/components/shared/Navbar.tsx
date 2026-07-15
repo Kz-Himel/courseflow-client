@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -30,6 +31,7 @@ export default function Navbar() {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   // Get data directly from your auth client
   const { data: session, isPending } = authClient.useSession();
@@ -38,6 +40,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await authClient.signOut();
+    router.push("/")
     setShowDropdown(false);
     setIsOpen(false);
   };
