@@ -35,7 +35,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: "easeOut" },
+    transition: { duration: 0.4, ease: "easeOut" as const }, //  এখানে ফিক্স করা হয়েছে
   },
 };
 
@@ -44,7 +44,7 @@ const floatAnimation = (delay: number = 0) => ({
   transition: {
     duration: 3,
     repeat: Infinity,
-    ease: "easeInOut",
+    ease: "easeInOut" as const, //  এখানেও টাইপ সেফটির জন্য যোগ করা হলো
     delay: delay,
   },
 });

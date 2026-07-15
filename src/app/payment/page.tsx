@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaCheckCircle } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const trx = searchParams.get("trx");
@@ -71,7 +71,7 @@ export default function PaymentSuccessPage() {
 
         <div className="flex flex-col gap-3">
           <Link
-            href="/my-courses"
+            href="/dashboard/my-courses"
             className="w-full bg-violet-600 hover:bg-violet-700 text-white font-medium py-2.5 rounded-xl transition-colors inline-block"
           >
             Go to My Courses
@@ -85,5 +85,20 @@ export default function PaymentSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm max-w-md w-full text-center flex flex-col items-center">
+          <div className="w-16 h-16 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Loading Payment Details...</h1>
+        </div>
+      </div>
+    }>
+      <PaymentSuccessContent />
+    </Suspense>
   );
 }

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
 import CourseCard from "@/components/courses/CourseCard";
-import { Course } from "@/types/payment";
+import { Course } from "@/types/course";
 
 const containerVariants = {
   hidden: {},

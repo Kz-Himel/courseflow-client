@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CourseCard from "@/components/courses/CourseCard";
 import CourseCardSkeleton from "../../components/courses/CoursesCardSkeleton";
 import FilterSidebar from "../../components/courses/FilterSidebar";
@@ -70,8 +70,24 @@ export default function CoursesPage() {
   // Page change tracker
   useEffect(() => {
     loadData(search, category, level, maxPrice, sortBy, page);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
+
+  // Live search — debounced, Apply button chapa lagbe na
+  const isFirstSearchRun = useRef(true);
+  useEffect(() => {
+    if (isFirstSearchRun.current) {
+      isFirstSearchRun.current = false;
+      return;
+    }
+    const timer = setTimeout(() => {
+      setPage(1);
+      loadData(search, category, level, maxPrice, sortBy, 1);
+    }, 500); // 500ms debounce
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
   // Sort dropdown
   const handleSortChange = (newSort: string) => {
@@ -152,11 +168,13 @@ export default function CoursesPage() {
 
               {/* SORTING DROPDOWN */}
               <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-500 whitespace-nowrap">Sort by:</label>
+                <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
+                  Sort by:
+                </label>
                 <select
                   value={sortBy}
                   onChange={(e) => handleSortChange(e.target.value)}
-                  className="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-violet-500 bg-white"
+                  className="text-sm font-medium text-gray-800 border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-violet-500 bg-white cursor-pointer"
                 >
                   <option value="newest">Newest</option>
                   <option value="price_asc">Price: Low to High</option>
@@ -172,7 +190,7 @@ export default function CoursesPage() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
               {loading
                 ? Array.from({ length: PAGE_LIMIT }).map((_, i) => (
                     <CourseCardSkeleton key={i} />

@@ -62,7 +62,7 @@ export default function FilterSidebar({
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search courses..."
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+          className="w-full rounded-lg border border-violet-200 bg-violet-50/50 px-3 py-2 text-sm font-medium text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:bg-white transition-colors"
         />
       </div>
 

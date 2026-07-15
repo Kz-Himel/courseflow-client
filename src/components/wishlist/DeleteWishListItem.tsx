@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import { AlertDialog, Button } from "@heroui/react";
-import { ObjectId } from "bson"; // যদি ফ্রন্টএন্ডে আইডি চেক করতে চান, নয়তো বাদ দিতে পারেন
 import { FaRegTrashCan } from "react-icons/fa6";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 
 interface DeleteWishlistItemProps {
   wishlistId: string;
-  onSuccess?: () => void; // ডিলিট হওয়ার পর লিস্ট রিফ্রেশ করার জন্য ফনকশন
+  onSuccess?: () => void; //
 }
 
 export function DeleteWishlistItem({ wishlistId, onSuccess }: DeleteWishlistItemProps) {
@@ -18,7 +17,7 @@ export function DeleteWishlistItem({ wishlistId, onSuccess }: DeleteWishlistItem
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      // ১. আপনার দেওয়া নিয়ম অনুযায়ী টোকেন নেওয়া হলো
+      //
       const tokenRes = await authClient.token?.();
       const token = tokenRes?.data?.token;
 
@@ -28,12 +27,12 @@ export function DeleteWishlistItem({ wishlistId, onSuccess }: DeleteWishlistItem
         return;
       }
 
-      // ২. এক্সপ্রেস ডিলিট API কল করা হলো
+      // 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/wishlists/${wishlistId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, // টোকেনটি হেডারে পাঠানো হলো
+          "Authorization": `Bearer ${token}`, 
         },
       });
 
@@ -77,17 +76,31 @@ export function DeleteWishlistItem({ wishlistId, onSuccess }: DeleteWishlistItem
             </AlertDialog.Body>
             
             <AlertDialog.Footer>
-              {/* ক্যানসেল বাটন */}
-              <Button className="text-gray-800" slot="close" variant="tertiary" disabled={isLoading}>
+              {/* */}
+              <Button 
+                className="text-gray-800" 
+                slot={isLoading ? undefined : "close"} 
+                variant="tertiary"
+                onClick={(e) => {
+                  if (isLoading) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                }}
+              >
                 Cancel
               </Button>
               
-              {/* ডিলিট কনফার্মেশন বাটন */}
               <Button 
-                slot={isLoading ? undefined : "close"} // লোডিং থাকা অবস্থায় ডায়ালগ যেন বন্ধ না হয়ে যায়
+                slot={isLoading ? undefined : "close"} 
                 variant="danger" 
-                onClick={handleDelete}
-                isLoading={isLoading} // হিরোইউআই বাটনের লোডিং স্পিনার
+                onClick={(e) => {
+                  if (isLoading) {
+                    e.preventDefault();
+                    return;
+                  }
+                  handleDelete();
+                }}
               >
                 {isLoading ? "Removing..." : "Yes, Remove"}
               </Button>

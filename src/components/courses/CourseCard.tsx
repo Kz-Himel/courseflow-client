@@ -21,7 +21,8 @@ const getYouTubeThumbnail = (url: string) => {
 
 export default function CourseCard({ course }: { course: Course }) {
   const badgeClass =
-    categoryColors[course.category] || "bg-violet-700 text-white";
+    // ২৪ নম্বর লাইনটি এভাবে আপডেট করুন:
+categoryColors[course.category || "default"] || "bg-violet-700 text-white";
 
   // 2. check if link from youtube if not create thumbnail
   const displayThumbnail = course.thumbnailUrl?.includes("youtube.com")

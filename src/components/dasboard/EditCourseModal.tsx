@@ -117,7 +117,7 @@ export default function EditCourseModal({
               name="title"
               value={formData.title}
               onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-600"
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-gray-800 focus:outline-none focus:border-violet-600 bg-gray-50/30"
             />
           </div>
 
@@ -130,7 +130,7 @@ export default function EditCourseModal({
               name="instructorName"
               value={formData.instructorName}
               onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-600"
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-gray-800 focus:outline-none focus:border-violet-600 bg-gray-50/30"
             />
           </div>
 
@@ -144,7 +144,7 @@ export default function EditCourseModal({
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-600"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-gray-800 focus:outline-none focus:border-violet-600 bg-gray-50/30"
               />
             </div>
             <div>
@@ -156,7 +156,7 @@ export default function EditCourseModal({
                 name="price"
                 value={formData.price}
                 onChange={handleChange}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-600"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-gray-800 focus:outline-none focus:border-violet-600 bg-gray-50/30"
               />
             </div>
           </div>
@@ -171,7 +171,7 @@ export default function EditCourseModal({
                 name="duration"
                 value={formData.duration}
                 onChange={handleChange}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-600"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-gray-800 focus:outline-none focus:border-violet-600 bg-gray-50/30"
               />
             </div>
             <div>
@@ -183,7 +183,7 @@ export default function EditCourseModal({
                 name="lessons"
                 value={formData.lessons}
                 onChange={handleChange}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-600"
+                className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-gray-800 focus:outline-none focus:border-violet-600 bg-gray-50/30"
               />
             </div>
           </div>
@@ -197,7 +197,7 @@ export default function EditCourseModal({
               name="thumbnail"
               value={formData.thumbnail}
               onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-600"
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-gray-800 focus:outline-none focus:border-violet-600 bg-gray-50/30"
             />
           </div>
 
@@ -209,7 +209,7 @@ export default function EditCourseModal({
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-violet-600"
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-gray-800 focus:outline-none focus:border-violet-600 bg-gray-50/30"
             >
               <option value="published">Published</option>
               <option value="draft">Draft</option>
