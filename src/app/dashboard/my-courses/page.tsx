@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import { FaStar, FaClock, FaBookOpen } from "react-icons/fa";
 import { EnrolledCourse } from "@/types/payment";
 
-// ১. ইউটিউব থাম্বনেইল বের করার হুবহু সেইম ফাংশন
 const getYouTubeThumbnail = (url: string) => {
   if (!url) return null;
   const videoId = url.split("v=")[1]?.split("&")[0];
@@ -107,7 +106,8 @@ export default function MyCoursesPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {enrolledCourses.map((item) => {
               // ২. CourseCard এর মতই চেক করে ইউটিউব বা ডিরেক্ট ইমেজ URL নির্ধারণ
-              const rawThumbnail = item.course?.thumbnailUrl || item.course?.thumbnail;
+              // line 110 পরিবর্তন করে এটা লিখুন:
+              const rawThumbnail = (item.course as any)?.thumbnailUrl || item.course?.thumbnail;
               const displayThumbnail = rawThumbnail?.includes("youtube.com")
                 ? getYouTubeThumbnail(rawThumbnail)
                 : rawThumbnail;
@@ -132,12 +132,12 @@ export default function MyCoursesPage() {
                         }}
                       />
                     ) : null}
-                    
+
                     {/* Fallback Placeholder (যদি ইমেজ না থাকে বা ক্র্যাশ করে) */}
                     <div className={`fallback-placeholder absolute inset-0 flex flex-col items-center justify-center bg-violet-50 px-4 text-center ${displayThumbnail ? 'hidden' : ''}`}>
                       <FaBookOpen className="w-6 h-6 text-violet-400 mb-1.5" />
                       <span className="text-violet-600 font-semibold text-xs tracking-wide">
-                        {item.course?.category || "Course"}
+                        {(item.course as any)?.category || "Course"}
                       </span>
                     </div>
                   </div>

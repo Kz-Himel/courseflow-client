@@ -4,7 +4,7 @@ export interface Course {
   instructorName: string;
   instructorTitle?: string;
   instructorBio?: string;
-  category: string;
+  category?: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   duration: string;
   lessons?: number;
