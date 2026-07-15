@@ -1,36 +1,164 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CourseFlow
 
-## Getting Started
+CourseFlow is a full-stack e-learning and course marketplace platform where creators can build, list, and sell courses, and learners can discover, purchase, and manage the courses they care about.
 
-First, run the development server:
+Built with a modern TypeScript stack — Next.js on the frontend, Express.js and MongoDB on the backend — CourseFlow supports secure authentication, course management, wishlists, and Stripe-powered payments.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+🔗 **Live Site:** https://courseflow-client.vercel.app/
+🖥️ **Server Repository:** https://github.com/Kz-Himel/courseflow-server
+
+---
+
+## ✨ Features
+
+- 🔐 **Authentication** — Secure sign-up/sign-in with [Better Auth](https://www.better-auth.com/), including protected routes on both client and server
+- 📚 **Course Management** — Creators can add, edit, and manage their own course listings ("My Listings", "Edit Course")
+- 💳 **Payments** — Course purchases powered by [Stripe](https://stripe.com/)
+- ❤️ **Wishlist** — Learners can save courses for later
+- 🧑‍🏫 **Role-based Access** — Separate flows and permissions for creators and learners
+- 🎨 **Consistent Design System** — Clean UI built on a strict violet / orange / neutral-gray color palette, with skeleton loaders and responsive card grids
+- ⚡ **Native MongoDB Driver** — No ORM overhead; direct, predictable database access
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | [Next.js](https://nextjs.org/) (App Router), TypeScript, [Tailwind CSS](https://tailwindcss.com/) |
+| Backend | [Express.js](https://expressjs.com/), TypeScript |
+| Database | [MongoDB](https://www.mongodb.com/) (native driver, no Mongoose) |
+| Auth | [Better Auth](https://www.better-auth.com/) |
+| Payments | [Stripe](https://stripe.com/) |
+| Icons | [react-icons](https://react-icons.github.io/react-icons/) |
+
+---
+
+## 📁 Project Structure
+
+```
+courseflow/
+├── client/                 # Next.js frontend (App Router)
+│   ├── app/
+│   ├── components/
+│   └── lib/
+├── server/                 # Express.js backend
+│   ├── routes/
+│   ├── controllers/
+│   ├── middleware/
+│   └── config/
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> Adjust this tree to match your actual folder layout if it differs.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Getting Started
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+- [Node.js](https://nodejs.org/) v18 or higher
+- A [MongoDB](https://www.mongodb.com/) instance (local or Atlas)
+- A [Stripe](https://dashboard.stripe.com/) account (for payment features)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 1. Clone the repository
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+git clone https://github.com/<your-username>/courseflow.git
+cd courseflow
+```
 
-## Deploy on Vercel
+### 2. Install dependencies
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Frontend
+cd client
+npm install
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Backend
+cd ../server
+npm install
+```
+
+### 3. Configure environment variables
+
+Create a `.env` file in `server/`:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+BETTER_AUTH_SECRET=your_better_auth_secret
+BETTER_AUTH_URL=http://localhost:5000
+STRIPE_SECRET_KEY=your_stripe_secret_key
+CLIENT_URL=http://localhost:3000
+```
+
+Create a `.env.local` file in `client/`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+```
+
+### 4. Run the development servers
+
+```bash
+# In server/
+npm run dev
+
+# In client/ (separate terminal)
+npm run dev
+```
+
+The frontend will be available at `http://localhost:3000` and the backend API at `http://localhost:5000`.
+
+---
+
+## 🔑 Authentication & Authorization
+
+CourseFlow uses **Better Auth** for session and JWT-based authentication:
+
+- Frontend retrieves the JWT via `authClient.token?.()`
+- Backend verifies requests using a `verifyToken` middleware, exposing the user via `req.user?.email`
+- Protected routes redirect unauthenticated users away from creator/learner-only pages
+
+---
+
+## 💳 Payments
+
+Course purchases are handled through Stripe Checkout. On successful payment, the backend confirms the transaction and grants the learner access to the purchased course.
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Course progress tracking
+- [ ] Reviews & ratings
+- [ ] Instructor analytics dashboard
+- [ ] Video hosting/streaming integration
+- [ ] Search and filtering improvements
+
+---
+
+## 🤝 Contributing
+
+This is currently a solo/independent project. Contributions, issues, and suggestions are welcome — feel free to open an issue or submit a pull request.
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 👤 Author
+
+**Kamrul Himel**
+Frontend-leaning Full-Stack Developer, Bangladesh
+
+- Portfolio: _add your link here_
+- GitHub: _add your link here_
+- Live Site: _add your link here_
+- Server Repo: _add your link here_
