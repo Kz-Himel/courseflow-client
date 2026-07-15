@@ -42,11 +42,6 @@ courseflow/
 │   ├── app/
 │   ├── components/
 │   └── lib/
-├── server/                 # Express.js backend
-│   ├── routes/
-│   ├── controllers/
-│   ├── middleware/
-│   └── config/
 └── README.md
 ```
 
@@ -76,14 +71,11 @@ cd courseflow
 cd client
 npm install
 
-# Backend
-cd ../server
-npm install
 ```
 
 ### 3. Configure environment variables
 
-Create a `.env` file in `server/`:
+Create a `.env` file in `client/`:
 
 ```env
 PORT=5000
@@ -94,24 +86,17 @@ STRIPE_SECRET_KEY=your_stripe_secret_key
 CLIENT_URL=http://localhost:3000
 ```
 
-Create a `.env.local` file in `client/`:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
 ```
 
 ### 4. Run the development servers
 
 ```bash
-# In server/
-npm run dev
 
 # In client/ (separate terminal)
 npm run dev
 ```
 
-The frontend will be available at `http://localhost:3000` and the backend API at `http://localhost:5000`.
+The frontend will be available at `http://localhost:3000`.
 
 ---
 
@@ -155,10 +140,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## 👤 Author
 
-**Kamrul Himel**
-Frontend-leaning Full-Stack Developer, Bangladesh
+**Khayruzzaman Himel**
+MERN-Stack Developer, Bangladesh
 
-- Portfolio: _add your link here_
-- GitHub: _add your link here_
-- Live Site: _add your link here_
-- Server Repo: _add your link here_
+- Portfolio: https://kzhimel.vercel.app/
