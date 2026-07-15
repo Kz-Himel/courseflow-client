@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   FiMenu,
   FiX,
@@ -29,8 +29,11 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileSearchQuery, setMobileSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
   // Get data directly from your auth client
   const { data: session, isPending } = authClient.useSession();
@@ -45,6 +48,25 @@ export default function Navbar() {
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+  const runSearch = (query: string) => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    router.push(`/courses?search=${encodeURIComponent(trimmed)}`);
+  };
+
+  const handleDesktopSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      runSearch(searchQuery);
+    }
+  };
+
+  const handleMobileSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      runSearch(mobileSearchQuery);
+      setIsOpen(false);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -94,13 +116,20 @@ export default function Navbar() {
           <div className="relative w-full group">
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleDesktopSearchKeyDown}
               placeholder="Search courses..."
               className="w-full rounded-xl border border-gray-200 bg-gray-50/60 py-2 pl-3 pr-9 text-sm text-gray-700 transition-all duration-200 outline-none focus:border-[#6C5CE7] focus:bg-white focus:ring-2 focus:ring-[#6C5CE7]/10"
             />
-            <FiSearch
-              size={16}
+            <button
+              type="button"
+              aria-label="Search"
+              onClick={() => runSearch(searchQuery)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#6C5CE7] transition-colors"
-            />
+            >
+              <FiSearch size={16} />
+            </button>
           </div>
         </div>
 
@@ -212,7 +241,7 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile & Tablet Panel (হাইট ইস্যু ফিক্স করা হয়েছে এখানে) */}
+      {/* Mobile & Tablet Panel */}
       <div
         className={`overflow-y-auto transition-all duration-300 ease-in-out lg:hidden ${
           isOpen ? "max-h-[85vh] opacity-100 border-t border-gray-100" : "max-h-0 opacity-0 pointer-events-none"
@@ -223,10 +252,23 @@ export default function Navbar() {
           <div className="relative">
             <input
               type="text"
+              value={mobileSearchQuery}
+              onChange={(e) => setMobileSearchQuery(e.target.value)}
+              onKeyDown={handleMobileSearchKeyDown}
               placeholder="Search courses..."
               className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2 pl-3 pr-9 text-sm text-gray-700 outline-none focus:border-[#6C5CE7] focus:bg-white"
             />
-            <FiSearch size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <button
+              type="button"
+              aria-label="Search"
+              onClick={() => {
+                runSearch(mobileSearchQuery);
+                setIsOpen(false);
+              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+            >
+              <FiSearch size={16} />
+            </button>
           </div>
 
           {/* Navigation Links for mobile/tablet */}
@@ -292,7 +334,6 @@ export default function Navbar() {
                     Signed in as: <span className="text-gray-900 font-semibold normal-case block text-sm mt-0.5">{userName}</span>
                   </div>
                 )}
-                {/* সরাসরি Signed in as এর নিচে লগআউট বাটন */}
                 <button
                   onClick={handleLogout}
                   className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50/60 transition-colors mt-2"
