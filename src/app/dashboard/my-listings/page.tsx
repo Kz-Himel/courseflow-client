@@ -85,7 +85,8 @@ export default function MyListingsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-istings            <p className="text-sm text-gray-500 mt-1">Courses you&apos;ve added to CourseFlow</p>
+            <h1 className="text-2xl font-bold text-gray-900">My Listings</h1>
+            <p className="text-sm text-gray-500 mt-1">Courses you&apos;ve added to CourseFlow</p>
           </div>
           <Link
             href="/dashboard/add-course"
